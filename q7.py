@@ -60,14 +60,25 @@ def print_result(processes):
     print("Avg Turnaround Time:", total_tat / n)
     print("Avg Response Time  :", total_rt / n)
 
-def plot(segment: List[GanttSegment]):
-    times = [s.start for s in segment] + [s.end for s in segment] 
-    times.sort()
-    plt.stem(times, [2] * len(times))
-    for s in segment:
-        mid = (s.start + s.end)/2
-        plt.text(mid,1,s.pid)
-    plt.xticks(range(int(min(times)), int(max(times)) + 1))
+# def plot(segment: List[GanttSegment]):
+#     times = [s.start for s in segment] + [s.end for s in segment] 
+#     times.sort()
+#     plt.stem(times, [2] * len(times))
+#     for s in segment:
+#         mid = (s.start + s.end)/2
+#         plt.text(mid,1,s.pid)
+#     plt.xticks(range(int(min(times)), int(max(times)) + 1))
+#     plt.show()
+
+import matplotlib.pyplot as plt
+
+def plot(s):
+    c = {}
+    for x in s:
+        c.setdefault(x.pid, plt.cm.tab10(len(c)))
+        plt.barh(0, x.end-x.start, left=x.start, color=c[x.pid])
+        plt.text((x.start+x.end)/2,0,f"P{x.pid}",ha='center',va='center')
+    plt.xticks(range(s[0].start, s[-1].end+1))
     plt.show()
 
 def round_robin(processes: List[Process], tt = 2):

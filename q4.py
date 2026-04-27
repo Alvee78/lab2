@@ -70,12 +70,22 @@ def print_result(processes: List[Process]):
         print("No processes")
 
 
-def plot(segments: List[Segment]):
-    times = [0] + [p.end for p in segments]
-    plt.stem(times, [2]*len(times))
-    for i, s in enumerate(segments):
-        mid = (times[i] + times[i+1]) / 2
-        plt.text(mid, 1, "P"+str(s.pid))
+# def plot(segments: List[Segment]):
+#     times = [0] + [p.end for p in segments]
+#     plt.stem(times, [2]*len(times))
+#     for i, s in enumerate(segments):
+#         mid = (times[i] + times[i+1]) / 2
+#         plt.text(mid, 1, "P"+str(s.pid))
+#     plt.show()
+
+import matplotlib.pyplot as plt
+
+def plot(s):
+    for i, x in enumerate(s):
+        plt.barh(0, x.end-x.start, left=x.start)
+        plt.text((x.start+x.end)/2, 0, f"P{x.pid}", ha='center')
+    plt.xticks(range(min(x.start for x in s), max(x.end for x in s)+1))
+    plt.yticks([])
     plt.show()
 
 processes = read_input()
